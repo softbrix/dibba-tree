@@ -2,9 +2,23 @@
   "name": "dibba-tree",
   "version": "0.9.5",
   "description": "A tree data model implementation for javascript",
-  "main": "index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "scripts": {
-    "test": "mocha"
+    "build": "tsc",
+    "test": "tsc -p tsconfig.test.json && mocha dist-test/test/**/*.js",
+    "prepublishOnly": "npm run build && npm test"
   },
   "repository": {
     "type": "git",
@@ -13,6 +27,7 @@
   "keywords": [
     "tree",
     "javascript",
+    "typescript",
     "data",
     "model",
     "dibba"
@@ -24,6 +39,9 @@
   },
   "homepage": "https://github.com/softbrix/dibba-tree#readme",
   "devDependencies": {
-    "mocha": "6.1.4"
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3"
   }
 }
