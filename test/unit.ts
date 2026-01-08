@@ -12,7 +12,53 @@ describe('Dibba tree', function() {
   const testObject4: TestObject = { a: 4 };
 
   describe('insert', function() {
-    const tree = new DibbaTree<TestObject>();
+    let tree: DibbaTree<TestObject>;
+
+    beforeEach(function() {
+      tree = new DibbaTree<TestObject>();
+    });
+
+    it('should throw error when content is undefined', function() {
+      assert.throws(
+        () => tree.insert(undefined as any),
+        /Content must not be undefined or null/
+      );
+    });
+
+    it('should throw error when content is null', function() {
+      assert.throws(
+        () => tree.insert(null as any),
+        /Content must not be undefined or null/
+      );
+    });
+
+    it('should successfully insert content at root path', function() {
+      tree.insert(testObject1);
+      assert.equal(tree.get(), testObject1);
+      assert.equal(tree.getSize(), 1);
+    });
+
+    it('should successfully insert content at nested path', function() {
+      tree.insert(testObject1, 'level1', 'level2', 'level3');
+      assert.equal(tree.get('level1', 'level2', 'level3'), testObject1);
+      assert.equal(tree.getSize(), 1);
+    });
+
+    it('should throw error when inserting duplicate node at root', function() {
+      tree.insert(testObject1);
+      assert.throws(
+        () => tree.insert(testObject2),
+        /Node already exists/
+      );
+    });
+
+    it('should throw error when inserting duplicate node at nested path', function() {
+      tree.insert(testObject1, 'a', 'b', 'c');
+      assert.throws(
+        () => tree.insert(testObject2, 'a', 'b', 'c'),
+        /Node already exists/
+      );
+    });
 
     it('should handle report and error if we try to insert undefined', function() {
       assert.throws(() => tree.insert(undefined as any), Error,
@@ -100,7 +146,33 @@ describe('Dibba tree', function() {
   });
 
   describe('update', function() {
-    const tree = new DibbaTree<TestObject | undefined | null>();
+    let tree: DibbaTree<TestObject | undefined | null>;
+
+    beforeEach(function() {
+      tree = new DibbaTree<TestObject | undefined | null>();
+    });
+
+    it('should create node if missing and update content at root', function() {
+      const initialSize = tree.getSize();
+      tree.update(testObject1);
+      assert.equal(tree.get(), testObject1);
+      assert.equal(tree.getSize(), initialSize + 1);
+    });
+
+    it('should create node if missing and update content at nested path', function() {
+      const initialSize = tree.getSize();
+      tree.update(testObject2, 'x', 'y', 'z');
+      assert.equal(tree.get('x', 'y', 'z'), testObject2);
+      assert.equal(tree.getSize(), initialSize + 1);
+    });
+
+    it('should update existing node without changing tree size', function() {
+      tree.insert(testObject1, 'key');
+      const initialSize = tree.getSize();
+      tree.update(testObject2, 'key');
+      assert.equal(tree.get('key'), testObject2);
+      assert.equal(tree.getSize(), initialSize);
+    });
 
     it('should handle update in the root node', function() {
       tree.insert(testObject1);
@@ -110,6 +182,7 @@ describe('Dibba tree', function() {
     });
 
     it('should handle update to undefined in the root node', function() {
+      tree.update(testObject2);
       assert.equal(testObject2, tree.get());
       tree.update(undefined);
       assert.equal(undefined, tree.get());
@@ -155,7 +228,38 @@ describe('Dibba tree', function() {
   });
 
   describe('delete', function() {
-    const tree = new DibbaTree<TestObject>();
+    let tree: DibbaTree<TestObject>;
+
+    beforeEach(function() {
+      tree = new DibbaTree<TestObject>();
+    });
+
+    it('should remove node correctly at root and update tree size', function() {
+      tree.insert(testObject1);
+      assert.equal(tree.getSize(), 1);
+      const deletedNode = tree.delete();
+      assert.equal(deletedNode!.content, testObject1);
+      assert.equal(tree.get(), undefined);
+      assert.equal(tree.getSize(), 0);
+    });
+
+    it('should remove node correctly at nested path and update tree size', function() {
+      tree.insert(testObject1, 'a', 'b');
+      tree.insert(testObject2, 'a', 'c');
+      assert.equal(tree.getSize(), 2);
+      const deletedNode = tree.delete('a', 'b');
+      assert.equal(deletedNode!.content, testObject1);
+      assert.equal(tree.get('a', 'b'), undefined);
+      assert.equal(tree.getSize(), 1);
+      assert.equal(tree.get('a', 'c'), testObject2);
+    });
+
+    it('should return undefined when deleting non-existent node', function() {
+      const initialSize = tree.getSize();
+      const deletedNode = tree.delete('nonexistent', 'path');
+      assert.equal(deletedNode, undefined);
+      assert.equal(tree.getSize(), initialSize);
+    });
 
     it('should handle delete in the root node', function() {
       tree.insert(testObject1);
