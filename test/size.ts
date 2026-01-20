@@ -1,18 +1,21 @@
-var assert = require('assert');
-var DibbaTree = require('../index.js');
+import assert from 'assert';
+import { DibbaTree } from '../src/index.js';
 
 describe('Dibba tree size', function() {
+  interface TestObject {
+    a: number;
+  }
 
-  var testObject1 = { a: 1};
-  var testObject2 = { a: 2};
-  var testObject3 = { a: 3};
-  var testObject4 = { a: 4};
+  const testObject1: TestObject = { a: 1 };
+  const testObject2: TestObject = { a: 2 };
+  const testObject3: TestObject = { a: 3 };
+  const testObject4: TestObject = { a: 4 };
 
   describe('insert', function() {
-    var tree;
+    let tree: DibbaTree<TestObject>;
 
     beforeEach(function() {
-      tree = new DibbaTree();
+      tree = new DibbaTree<TestObject>();
     });
 
     it('should increase size when insert', function() {
