@@ -23,6 +23,9 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
       
+      - name: Ensure npm CLI supports trusted publishing
+        run: npm install -g npm@latest
+      
       - name: Install dependencies
         run: npm ci
       
@@ -32,5 +35,14 @@ jobs:
       - name: Test
         run: npm test
       
+      - name: Debug - Check npm version and OIDC
+        run: |
+          npm --version
+          echo "Registry: $(npm config get registry)"
+          echo "OIDC available: ${{ github.token != '' }}"
+          npm whoami || echo "Not authenticated"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --provenance --access public
