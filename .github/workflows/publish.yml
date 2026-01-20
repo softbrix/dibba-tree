@@ -32,5 +32,19 @@ jobs:
       - name: Test
         run: npm test
       
+      - name: Debug - Check OIDC token availability
+        run: |
+          echo "ACTIONS_ID_TOKEN_REQUEST_URL is set: ${{ env.ACTIONS_ID_TOKEN_REQUEST_URL != '' }}"
+          echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN is set: ${{ env.ACTIONS_ID_TOKEN_REQUEST_TOKEN != '' }}"
+      
+      - name: Debug - Check npm configuration
+        run: |
+          npm config list
+          echo "---"
+          npm whoami || echo "Not authenticated"
+      
+      - name: Debug - Verbose publish (dry-run)
+        run: npm publish --dry-run --loglevel verbose
+      
       - name: Publish to npm
         run: npm publish --provenance --access public
