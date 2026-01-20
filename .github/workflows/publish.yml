@@ -41,6 +41,8 @@ jobs:
           echo "Registry: $(npm config get registry)"
           echo "OIDC available: ${{ github.token != '' }}"
           npm whoami || echo "Not authenticated"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
       - name: Publish to npm
         run: npm publish --provenance --access public
