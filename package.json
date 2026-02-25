@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/softbrix/dibba-tree.git"
+    "url": "git+https://github.com/SoftbrixAB/dibba-tree.git"
   },
   "keywords": [
     "tree",
@@ -35,9 +35,9 @@
   "author": "Andreas Sehr",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/softbrix/dibba-tree/issues"
+    "url": "https://github.com/SoftbrixAB/dibba-tree/issues"
   },
-  "homepage": "https://github.com/softbrix/dibba-tree#readme",
+  "homepage": "https://github.com/SoftbrixAB/dibba-tree#readme",
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/node": "^22.0.0",

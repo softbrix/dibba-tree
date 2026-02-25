@@ -97,6 +97,18 @@ describe('Dibba tree leaf iterator', function() {
     assert.equal(it.next(), '3');
   });
 
+  it('should move to adjacent leaves immediately after goto path', function() {
+    const it = new LeafIterator(simpleTree());
+    it.gotoPath([0, 2, 1]); // Third ('2')
+    assert.equal(true, it.hasNext());
+    assert.equal(true, it.hasPrev());
+    assert.equal('2', it.next());
+
+    it.gotoPath([0, 2, 1]); // Third ('2')
+    assert.equal(true, it.hasPrev());
+    assert.equal('2', it.prev());
+  });
+
   it('should goto path pick last child', function() {
     const it = new LeafIterator(simpleTree());
     assert.equal(it.next(), '0');

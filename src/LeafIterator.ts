@@ -17,7 +17,7 @@ function hasChildren<T>(node: DibbaNode<T> | undefined): boolean {
  * Get child keys from node (expects node to have children)
  */
 function childKeys<T>(node: DibbaNode<T>): string[] {
-  return Object.keys(node.children);
+  return Object.keys(node.children).sort();
 }
 
 /**
